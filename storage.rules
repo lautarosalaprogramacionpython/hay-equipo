@@ -1,0 +1,70 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isChatMember(chatId) {
+      return signedIn()
+        && request.auth.uid in firestore.get(
+          /databases/(default)/documents/chats/$(chatId)
+        ).data.participants;
+    }
+
+    function isTeamMember(teamId) {
+      return signedIn()
+        && request.auth.uid in firestore.get(
+          /databases/(default)/documents/teams/$(teamId)
+        ).data.members;
+    }
+
+    function isMatchMember(matchId) {
+      return signedIn()
+        && request.auth.uid in firestore.get(
+          /databases/(default)/documents/matches/$(matchId)
+        ).data.participantIds;
+    }
+
+    function validAttachment(userId) {
+      return signedIn()
+        && request.auth.uid == userId
+        && request.resource != null
+        && request.resource.size > 0
+        && (
+          (request.resource.contentType in [
+            'image/jpeg', 'image/png', 'image/webp', 'image/heic',
+            'image/heif', 'image/gif'
+          ] && request.resource.size <= 15 * 1024 * 1024)
+          || (request.resource.contentType in [
+            'video/mp4', 'video/x-m4v', 'video/quicktime', 'video/webm'
+          ] && request.resource.size <= 50 * 1024 * 1024)
+          || (request.resource.contentType in [
+            'audio/mp4', 'audio/aac', 'audio/wav', 'audio/mpeg',
+            'audio/ogg', 'audio/webm'
+          ] && request.resource.size <= 20 * 1024 * 1024)
+        );
+    }
+
+    match /chats/{chatId}/messages/{messageId}/{userId}/{fileName} {
+      allow read: if isChatMember(chatId);
+      allow create, update: if isChatMember(chatId)
+        && validAttachment(userId);
+      allow delete: if isChatMember(chatId) && request.auth.uid == userId;
+    }
+
+    match /teams/{teamId}/messages/{messageId}/{userId}/{fileName} {
+      allow read: if isTeamMember(teamId);
+      allow create, update: if isTeamMember(teamId)
+        && validAttachment(userId);
+      allow delete: if isTeamMember(teamId) && request.auth.uid == userId;
+    }
+
+    match /matches/{matchId}/messages/{messageId}/{userId}/{fileName} {
+      allow read: if isMatchMember(matchId);
+      allow create, update: if isMatchMember(matchId)
+        && validAttachment(userId);
+      allow delete: if isMatchMember(matchId) && request.auth.uid == userId;
+    }
+  }
+}

@@ -1,0 +1,305 @@
+PROMPT ACTUALIZADO PARA CONTINUAR CON CLAUDE CODE
+================================================
+
+Este bloque es la instruccion vigente y reemplaza cualquier dato de estado,
+prioridad o restriccion contradictoria que aparezca mas abajo en las notas
+historicas. Primero inspecciona el workspace actual: puede haber cambios que
+se hicieron despues de guardar este archivo. No restaures ni sobrescribas
+cambios existentes.
+
+PROYECTO Y OBJETIVO
+
+Proyecto: C:\Users\diner\OneDrive\Desktop\hay equipo
+App Flutter: Hay Equipo, futbol amateur, Android/iOS y demo web local.
+
+Completa y valida el trabajo empezado, sin rehacer la app. Conserva las
+funciones existentes y prioriza, en este orden:
+1. Dejar compilables los cambios recientes de adjuntos en chats.
+2. Terminar y verificar Equipos en modo demo local.
+3. Pulir Publicar, efectos de interaccion, temas de color y acceso a
+   iniciar sesion/crear cuenta.
+4. Ejecutar validaciones, actualizar CAMBIOS.md y producir un ZIP verificable.
+
+DECISIONES Y LIMITES
+
+- Mantener Flutter/Dart, Firebase existente, rutas, modelos y logica de negocio,
+  excepto los cambios minimos ya autorizados para adjuntos de chat.
+- El usuario autorizo expresamente el soporte de imagenes, GIF, video y audio
+  en chats tanto en demo local como en Firebase. Ese permiso incluye el uso de
+  Firebase Storage y los cambios estrictamente necesarios al formato de
+  mensajes y reglas para adjuntos. No ampliar el cambio a otras funciones de
+  Firebase, no desplegar reglas ni subir archivos a un proyecto real.
+- firebase_storage fue agregado para esa funcion; no agregar otros paquetes.
+  No revertir esta dependencia.
+- En DEMO_MODE, los adjuntos, mensajes, equipos y reportes deben presentarse
+  claramente como locales. Nunca afirmar que un mensaje o reporte fue enviado a
+  otro usuario o a soporte.
+- Soporte correcto: nsala932@gmail.com.
+- Mantener los cinco destinos moviles Inicio, Partidos, Equipos, Chats y Perfil;
+  Jugadores se accede desde Equipos/Inicio conservando las rutas actuales.
+- No incluir, imprimir ni copiar credenciales. Excluir configuraciones Firebase,
+  .env, llaves, builds y dependencias del ZIP.
+- No apagar la computadora ni dejar servidores/builds ejecutandose al terminar.
+
+ESTADO RECIENTE — TODAVIA NO VALIDADO
+
+- Se amplio el chat Firebase con selector y renderizado de foto/GIF/video/audio,
+  carga a Storage, metadatos de mensajes y grabacion/reproduccion. La demo
+  admite adjuntos locales. Limites implementados: imagen/GIF 15 MB, video
+  50 MB, audio 20 MB. La seleccion de GIF puede no preservar animacion en todos
+  los dispositivos.
+- Se agrego firebase_storage 12.4.10, helpers multiplataforma,
+  storage.rules y referencia desde firebase.json; firestore.rules acepta el
+  esquema de adjuntos. Nada de esto se ha desplegado.
+- La carga de audio local en web puede depender de una URL temporal y no
+  sobrevivir al refresco. Comprueba el comportamiento real y etiquetalo sin
+  prometer persistencia que no exista.
+- Se implemento el inicio de una experiencia local de Equipos (crear equipo,
+  solicitudes, aprobar/rechazar y chat de equipo) con persistencia local.
+- Publicar se hizo mas destacado; las paletas tienen nombres futboleros y se
+  empezo a aplicar el tema semantico. Los efectos usan un asset local
+  assets\audio\touch_click.wav y reproductor separado; la musica ambiental
+  anterior solo tiene volumen reducido y aun no se evaluo.
+- Se agregaron tests para el flujo local de equipo y serializacion de adjuntos.
+- En esta sesion se corrigio la firma async del helper IO de subida y se
+  agregaron comprobaciones context.mounted en acciones de Equipos. El analisis
+  de esos cambios se inicio, pero su resultado no esta confirmado: vuelve a
+  ejecutarlo.
+- No se ha confirmado que el codigo reciente compile, que pasen los nuevos
+  tests, que el build web funcione ni que las reglas sean validas.
+- Existe una suite completa con un fallo preexistente conocido en
+  test\widget_test.dart (importa material_ui y referencia MyApp/Icons no
+  resueltos). Verifica el estado actual antes de atribuirlo; no lo arregles como
+  parte de esta tarea si sigue siendo ajeno a los cambios.
+- CAMBIOS.md y el ZIP pueden estar desactualizados. Revisa antes de reemplazar.
+
+ARCHIVOS QUE DEBES INSPECCIONAR PRIMERO
+
+- lib\main.dart: chat real, carga y visualizacion de adjuntos, voz, autenticacion
+  y perfil.
+- lib\chat_media_upload.dart, lib\chat_media_upload_io.dart,
+  lib\chat_media_upload_web.dart: firmas y carga multiplataforma.
+- lib\social\social_hub.dart: Equipos/demo, conversaciones locales, Publicar,
+  paletas, musica y efectos.
+- firestore.rules, storage.rules, firebase.json: reglas para adjuntos.
+- pubspec.yaml y pubspec.lock: dependencia de Storage y assets.
+- test\voice_message_test.dart, test\demo_team_test.dart,
+  test\theme_contrast_test.dart y test\widget_test.dart.
+- README.md, CAMBIOS.md, CONTINUAR_MANANA.txt y cualquier ZIP existente.
+
+PLAN DE TRABAJO
+
+1. Inspecciona el estado actual y el diff de los archivos relevantes. Este
+   directorio puede no ser un repositorio Git; no dependas de git. Identifica
+   cambios sin guardar y evita pisarlos.
+2. Resuelve errores de compilacion y tipos en la carga de adjuntos. Asegura que
+   los adaptadores IO y web y su caller tengan una API coherente; maneja errores
+   de carga visiblemente y evita publicar un mensaje con URL/archivo fallido.
+   Conserva compatibilidad con mensajes de texto antiguos.
+3. Revisa que la demo de Equipos ya no sea un placeholder y que crear, pedir
+   ingreso, cancelar, aprobar/rechazar y abrir el chat funcionen y persistan
+   segun el almacenamiento local real. No afirmes que esas acciones llegan a
+   otros jugadores.
+4. Revisa Publicar, efectos, colores y autenticacion sin cambiar logica ni
+   servicios. Los temas deben colorear controles desde Theme/ThemeExtension;
+   no reemplaces colores propios de fotos o contenido. Si no puedes validar
+   audicion o UI visualmente, dilo.
+5. Inspecciona los permisos/plataformas requeridos para microfono, galeria y
+   video sin ampliar configuracion sensible. No agregues paquetes. No afirmes
+   compatibilidad universal de GIF si el picker no la garantiza.
+6. Formatea los Dart editados y valida con Flutter del entorno. Ejecuta primero
+   tests focalizados, luego flutter analyze y:
+   flutter build web --debug --dart-define=DEMO_MODE=true
+   Ejecuta flutter pub get solo si hace falta por el cambio ya existente de
+   pubspec. Registra la salida real. Distingue errores preexistentes de nuevos;
+   no escondas warnings.
+7. Si Firebase CLI/emuladores ya estan disponibles, valida reglas localmente,
+   sin instalar tooling innecesario ni desplegar. Si no estan disponibles,
+   documenta que storage.rules y firestore.rules no se validaron.
+8. Revisa manualmente en web si hay navegador disponible; de lo contrario,
+   declara que no hubo prueba visual. No dejes servidores activos.
+9. Actualiza CAMBIOS.md con archivos, comportamiento conservado, limitaciones,
+   pruebas reales y pasos de configuracion de Storage para el usuario.
+10. Crea hay-equipo-rediseno.zip con rutas relativas intactas y solo archivos
+    modificados/necesarios, incluyendo licencias de fuentes y CAMBIOS.md.
+    No incluyas este TXT salvo que el usuario lo pida. Lista y revisa el
+    contenido del ZIP y confirma que no contiene secretos, build ni dependencias.
+
+DETALLES DE CHAT Y SEGURIDAD
+
+- Mensajes nuevos pueden incluir type, mediaUrl, storagePath, mediaName,
+  mimeType y durationMs; los mensajes antiguos de texto deben seguir
+  renderizando.
+- Storage usa rutas de chats/equipos/partidos y reglas de membresia. Revisa
+  que las reglas no permitan leer o borrar adjuntos a usuarios no participantes
+  y que el tipo/tamano se valide. Reporta riesgos; no despliegues.
+- Las URLs de descarga de Firebase pueden incluir tokens: no registrarlas en
+  logs ni exponerlas fuera del chat. Mantener el acceso restringido.
+- En modo demo, etiquetar adjuntos y audios como locales y explicar donde se
+  guardan y si desaparecen al recargar. No mostrar checks de entrega/lectura
+  como si hubiera otros usuarios conectados.
+
+ENTREGA Y HONESTIDAD
+
+Al finalizar, resume en espanol: cambios, validaciones con resultados exactos,
+fallos conocidos, limitaciones de Firebase/GIF/audio local y ruta del ZIP.
+No digas "funciona" si solo compilo; separa compilacion, tests, reglas y prueba
+visual. Si algo no se puede terminar con seguridad, deja el resto funcional y
+explica claramente lo pendiente.
+
+NOTAS HISTORICAS
+==============
+El texto que sigue conserva contexto de sesiones anteriores y puede contener
+estado o recomendaciones obsoletas. En caso de contradiccion, sigue el prompt
+actualizado de arriba y verifica siempre el codigo del workspace.
+
+HAY EQUIPO — CONTINUIDAD PARA LA PROXIMA SESION
+
+Proyecto:
+C:\Users\diner\OneDrive\Desktop\hay equipo
+
+OBJETIVO DEL USUARIO
+
+Redisenar y completar la experiencia de Hay Equipo para futbol amateur, sin
+cambiar Flutter, Firebase, dependencias, rutas ni logica del backend. Mantener
+las funciones existentes de muro, stories, partidos/matchmaking, equipos,
+jugadores, chats, notas de voz, reportes, temas y musica opcional.
+
+Feedback mas reciente:
+- La seccion Equipos no funciona en la demo.
+- La musica ambiental suena mal; mejorarla o hacerla menos invasiva.
+- Los efectos de interaccion no se oyen.
+- Cambiar la paleta deja muchos componentes con sus colores anteriores.
+- Poner nombres mas futboleros a las paletas.
+- Falta que iniciar sesion/registrarse resulte visible y facil de entender.
+- El usuario se va a dormir y quiere continuar manana; no hace falta volver a
+  preguntar decisiones ya confirmadas.
+
+DECISIONES CONFIRMADAS
+
+- Navegacion movil de cinco destinos: Inicio, Partidos, Equipos, Chats y Perfil.
+- Jugadores queda como pestaña dentro de Equipos y tiene acceso rapido desde
+  Inicio.
+- Mantener DEMO_MODE claramente local. No fingir que mensajes, audios ni
+  reportes llegan a otras personas o a soporte.
+- Correo correcto: nsala932@gmail.com. En demo solo se copia; no agregar
+  paquetes para abrir correo.
+- No agregar paquetes ni cambiar Flutter/Firebase. Los cambios de esta tarea
+  deben seguir siendo visuales/demo-locales, salvo el arreglo solicitado de la
+  experiencia local de Equipos.
+- No incluir secretos ni credenciales en entregables.
+
+ESTADO ANTES DEL ULTIMO FEEDBACK
+
+- Ya se habia aplicado un redisenio visual parcial: ThemeExtension, calculo y
+  test de contraste, modo claro/oscuro/sistema, fuentes locales OFL,
+  navegacion responsive, acceso Jugadores, etiquetas de demo, colores en
+  algunas pantallas y un mini reproductor.
+- Archivos del redisenio:
+  lib\main.dart
+  lib\social\social_hub.dart
+  lib\social\hay_equipo_theme.dart (nuevo)
+  test\theme_contrast_test.dart (nuevo)
+  pubspec.yaml (solo fuentes)
+  assets\fonts\Inter.ttf
+  assets\fonts\BarlowCondensed-SemiBold.ttf
+  assets\fonts\BarlowCondensed-Bold.ttf
+  assets\fonts\OFL-Inter.txt
+  assets\fonts\OFL-BarlowCondensed.txt
+- CAMBIOS.md ya existe en la raiz.
+- El build web de la version anterior a los cambios mas recientes paso:
+  flutter build web --debug --dart-define=DEMO_MODE=true
+- El servidor local http://127.0.0.1:7357/ respondio HTTP 200, pero sirve la
+  version anterior al ultimo feedback. El build debe repetirse antes de usarlo.
+- Las pruebas focalizadas anteriores pasaron (contraste y serializacion de
+  notas de voz; 3 tests).
+- La suite completa falla por test\widget_test.dart: importa
+  package:material_ui/material_ui.dart y usa MyApp/Icons no resueltos. Es un
+  problema preexistente y no se cambio.
+- flutter analyze reporto 43 issues antes de los ultimos cambios; 3 errores son
+  del test obsoleto y hay avisos de estilo/deprecacion del SDK. El resumen de
+  la linea base era 22 issues. Volver a ejecutar y documentar sin ocultar el
+  resultado.
+
+INSPECCION DEL FEEDBACK Y CAMBIOS INICIADOS (INCOMPLETOS)
+
+Hallazgos:
+- SocialDemoHome todavia pasa _DemoOnlyPage como teamsPage. Ese placeholder es
+  la causa evidente de que Equipos no funcione en modo demo.
+- playEffect() usa SystemSound.play(SystemSoundType.click), que no garantiza
+  que se oiga en web.
+- Hay varios colores fijos (_socialGreen, _socialInk, Colors.white y valores
+  hexadecimales) en main.dart y social_hub.dart, por lo que cambiar paleta no
+  afecta toda la interfaz.
+
+Ya se empezo, pero NO se completo:
+- Se agrego el modelo local DemoTeam a social_hub.dart.
+- Se cambiaron nombres de paleta a Verde Potrero, Azul Visitante,
+  Naranja de Tribuna y Noche de cancha.
+- SocialDemoStore ahora tiene una lista de equipos locales de muestra, carga
+  y guarda equipos en SharedPreferences, y tiene metodos para crear equipo,
+  pedir unirse, cancelar solicitud, aprobar/rechazar solicitudes y abrir un
+  chat de equipo local.
+- playEffect() empezo a usar un AudioPlayer separado y el asset
+  assets\audio\touch_click.wav, pero ese asset TODAVIA NO EXISTE.
+- El volumen del loop ambiental se redujo de 0.18 a 0.10.
+- Todavia no se conecto el modelo/metodos a una pantalla real de Equipos. La
+  demo sigue mostrando _DemoOnlyPage.
+- No se ha formateado, analizado, probado ni compilado nada de esta ultima
+  tanda. Primero completar el codigo y crear el efecto local, luego validar.
+
+PROXIMOS PASOS RECOMENDADOS
+
+1. Retomar social_hub.dart. Conectar SocialDemoHome a una pantalla funcional de
+   Equipos/Jugadores y crear pantallas/dialogos demo-locales para:
+   - ver equipos 5 y 7;
+   - crear un equipo y quedar como capitan;
+   - pedir unirse/cancelar solicitud;
+   - aceptar/rechazar solicitudes entrantes del equipo propio;
+   - abrir el chat local del equipo usando _DemoChatScreen y el store existente.
+   Mostrar siempre que esos datos y acciones son locales a la demo.
+2. Crear assets\audio\touch_click.wav de forma original y corta, o cambiar la
+   solucion a un efecto disponible y probar que AudioPlayer lo reproduzca en
+   web. No dejar una referencia a un asset inexistente. Al activar los efectos,
+   ofrecer un sonido de prueba. Registrar errores de audio, no silenciarlos.
+3. Decidir si se reemplaza ambient_loop.wav por otra pieza original. No bajar
+   audio de licencia dudosa. Si no se puede escuchar/validar aqui, dejarla
+   opcional y apagada por defecto, con volumen bajo, y explicar el limite.
+4. Hacer que la paleta se aplique a los widgets existentes:
+   - en lib/main.dart: Auth, _CardTile, _EmptyView, _ErrorView, chat bubbles y
+     elementos de Teams/Players;
+   - en lib/social/social_hub.dart: _MatchHero, tarjetas de perfil, estados
+     vacios, placeholders, avatar, perfil y elementos de creacion de post.
+   Conservar colores propios de fotos/avatar/datos de muestra cuando sean
+   contenido, no colores de interfaz.
+5. Inspeccionar el flujo de autenticacion en lib/main.dart: PhoneSignInScreen,
+   ProfileScreen y AuthGate existen. Aclarar y pulir la distincion visual
+   "Iniciar sesion" / "Crear cuenta" con telefono, email/nombre segun el flujo
+   real; no inventar auth, rutas ni cambiar Firebase. Si el usuario esperaba
+   alta distinta del flujo actual, explicar que hace falta antes de modificar
+   backend.
+6. Formatear los Dart modificados. Ejecutar:
+   flutter pub get
+   flutter test test\theme_contrast_test.dart test\voice_message_test.dart
+   flutter test
+   flutter analyze
+   flutter build web --debug --dart-define=DEMO_MODE=true
+   Reportar el fallo preexistente del test completo, sin afirmar que paso.
+7. Actualizar CAMBIOS.md con lo que realmente se hizo y con la salida real de
+   validacion. Probar visualmente si hay navegador disponible; si no, decirlo.
+8. Rehacer hay-equipo-rediseno.zip con rutas relativas intactas. La compresion
+   anterior no quedo validada: Compress-Archive aplanaba las carpetas y el
+   intento .NET fallo porque System.IO.Compression.ZipFile no estaba cargado.
+   Cargar System.IO.Compression.FileSystem o usar otra tecnica, listar entradas,
+   extraer en carpeta de revision y verificar que no haya build, dependencias,
+   credenciales ni archivos ajenos. El TXT de continuidad no debe ir dentro del
+   ZIP de la app.
+
+RESTRICCIONES DE IMPLEMENTACION
+
+- Revisar antes de tocar; no restaurar ni borrar trabajo previo.
+- No modificar reglas, repositorios, modelos Firebase, rutas ni llamadas remotas.
+- No instalar paquetes.
+- Mantener las funciones y callbacks que ya existen.
+- Reportar honestamente cualquier validacion que no se pudo hacer.
+- No apagar la computadora. Dejar el proyecto y la demo listos para continuar.
